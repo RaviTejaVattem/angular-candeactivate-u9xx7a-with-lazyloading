@@ -1,7 +1,8 @@
 import { Component, NgModule } from "@angular/core";
+import { LocationStrategy } from "@angular/common";
 import { Routes, RouterModule, Router, NavigationStart } from "@angular/router";
 import { Event as NavigationEvent } from "@angular/router";
-import { filter } from "rxjs/operators";
+import { filter, tap } from "rxjs/operators";
 
 @Component({
   selector: "my-app",
@@ -21,12 +22,21 @@ import { filter } from "rxjs/operators";
   ]
 })
 export class AppComponent {
-  constructor(private router: Router) {
+  constructor(private router: Router, private location: LocationStrategy) {
+    location.onPopState((value) => {
+      console.log('?????????????????');
+      console.log('BROWSER BUTTON CLICKED', value);
+      router.navigate
+    });
     router.events
       .pipe(
         // The "events" stream contains all the navigation events. For this demo,
         // though, we only care about the NavigationStart event as it contains
         // information about what initiated the navigation sequence.
+        tap(events => {
+          console.log('>>>>>>>>>>>>>>');
+          console.log(events);
+        }),
         filter((event: NavigationEvent) => {
           return event instanceof NavigationStart;
         })
@@ -84,8 +94,6 @@ export class BComponent {}
   template: "<h1>C</h1>"
 })
 export class CComponent {}
-
-
 
 /** router */
 
